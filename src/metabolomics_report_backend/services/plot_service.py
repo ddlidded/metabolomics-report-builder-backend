@@ -59,6 +59,8 @@ def generate_bar_plot(
 ) -> tuple[Path, dict]:
     """Generate a single bar plot image and return its path plus statistics."""
     groups = sorted(group_stats.keys())
+    if not groups:
+        raise ValueError("No groups provided for plotting")
     means = [group_stats[g]["mean"] for g in groups]
     stds = [group_stats[g]["std"] for g in groups]
 

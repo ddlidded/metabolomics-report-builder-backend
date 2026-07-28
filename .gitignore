@@ -11,3 +11,6 @@ dist/
 .vscode/
 *.sqlite3
 /tmp/metabolomics_report_data
+node_modules/
+frontend/dist/
+*.log

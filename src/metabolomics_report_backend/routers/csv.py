@@ -52,6 +52,12 @@ async def generate_from_csv(
     except Exception as exc:
         raise HTTPException(status_code=400, detail=f"CSV parse error: {exc}") from exc
 
+    if not group_map:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Selected groups {selected_groups} do not match any columns in the CSV",
+        )
+
     session_output = OUTPUTS_DIR / session
     session_output.mkdir(parents=True, exist_ok=True)
 

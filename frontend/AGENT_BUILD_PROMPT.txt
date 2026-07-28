@@ -1,0 +1,209 @@
+METABOLOMICS CENTER PDF REPORT BUILDER — FRONTEND BUILD PROMPT
+==============================================================
+
+Build a professional desktop-style React GUI for a Python application called
+"Metabolomics Center PDF Report Builder." Scientists use it to generate polished
+PDF reports from metabolomics/lipidomics plot images and CSV data.
+
+TECH STACK
+----------
+React 18 + TypeScript, Tailwind CSS v4, Radix UI primitives, Lucide React icons,
+Recharts for any data visualizations, Sonner for toasts, Motion for animations.
+Font: Inter (body), DM Mono (filenames, data values). No external state manager —
+lift state to App.tsx and pass props down.
+
+COLOR PALETTE
+-------------
+Primary (navy/purple): #1E1B4B
+Accent teal: #17A398
+Gold highlight: #FFB703
+Background: #F8F9FC (app shell), #FFFFFF (cards/panels)
+Border: #E2E8F0
+Text: #17172A (heading), #334155 (body), #64748B (muted)
+Purple badge: #ede9fe / #5b21b6
+Teal badge: #ccfbf1 / #0f766e
+
+LAYOUT — THREE ZONES
+---------------------
+1. LEFT SIDEBAR (220px, bg #1E1B4B)
+   - Logo: flask icon + "METABOLOMICS / PDF Report Builder"
+   - Status badge showing figure count + READY state
+   - Nav items with teal left-border + teal bg on active state:
+     Dashboard | Images & Figures | CSV Plot Generator | Page Layout |
+     Cover Page | Statistics Export | Preview & Export | Settings Presets
+   - Footer: version + facility name
+
+2. CENTER PANEL (flex-1, scrollable, bg #F8F9FC)
+   Changes per active nav section — see PANELS below.
+
+3. RIGHT SETTINGS PANEL (300px, bg white, always visible)
+   Scrollable accordion with 6 collapsible sections (Radix Collapsible or
+   simple useState toggle):
+   1. Report Settings: title, header label, footer text, orientation
+      (Portrait/Landscape radio), image fit (contain/cover/stretch), color
+      pickers for header/background/card-border colors.
+   2. Generated Plot Settings: y-axis label (default "Peak Area"), group 1/2/point
+      color pickers, show p-value checkbox, run ANOVA checkbox, font size select
+      (Auto,14,12,10,9,8,7,6), rotation select (Auto,0,30,45,60,90). Add helper
+      text about Auto mode.
+   3. Combined Section Layouts: for each of 6 section types (Summary/Global,
+      Heatmap, PCA/PLSDA, Volcano, Individual Bar Plots, Other) show a label +
+      mini SVG grid preview + select (1,2,4,6,8,9,12 plots per page).
+   4. Spacing & Sizing: number inputs for margin, header height, footer height,
+      card gap, image padding (all in inches). Font selects for header title,
+      header subtitle, image title, footer.
+   5. Cover Page: include-cover checkbox, cover design select (6 styles), mini
+      SVG cover preview card, project title + prepared-by text inputs, color
+      pickers for primary/accent/background/ink.
+   6. Export Options: 8 checkboxes (export Maven CSV, export stats CSV, section
+      breaks, show header, show footer, page numbers, extra titles,
+      use filenames if blank). Import/Export settings buttons.
+   Sticky footer: "Preview PDF" + "Export PDF Report" primary buttons.
+
+PANELS (center content per nav section)
+-----------------------------------------
+DASHBOARD:
+  - 4 stat cards (Total Figures, Single-Page, Combined Grid, Sections) with
+    icon + number + label.
+  - Workflow guide: 5 clickable step cards (Add Images → CSV Generator →
+    Page Layout → Cover Page → Preview & Export) each with step number, icon,
+    title, description, arrow. Clicking navigates to that section.
+  - Figure breakdown: per-section progress bars.
+  - Dark (#1E1B4B) quick-tips card with 4 bullet tips.
+
+IMAGES & FIGURES (primary work area):
+  Table titled "Plot Selection & Page Assignment".
+  Toolbar above table (grouped by function):
+    ADD: [Add Images] [Import CSV + Generate Bar Plots]
+    REMOVE: [Remove Selected] [Clear All]
+    ORDER: [Move to Top] [Move Up] [Move Down] [Sort by File Name]
+    MODE: [Set SINGLE PAGE] [Set COMBINED GRID]
+    PROPS: [Apply Section dropdown] [Edit Title] [Use File Names as Titles]
+  Table columns: checkbox | # (DM Mono) | thumbnail SVG | plot title (editable
+  inline on pencil click) | file name (DM Mono) | page mode badge | section
+  dropdown badge | actions (edit + remove buttons).
+  Page mode badges: purple pill "SINGLE PAGE", teal pill "COMBINED GRID".
+  Section badge opens inline dropdown to change section.
+  Thumbnails: small SVG illustrations per section type (scatter for PCA,
+  heatmap grid for Heatmap, V-scatter for Volcano, bars for Bar Plots, line
+  for Summary, generic bars for Other).
+  Empty state: centered upload icon + helper text + Add/Import buttons.
+
+CSV PLOT GENERATOR:
+  Step 1: CSV file drop zone. On load show success state with filename.
+  Step 2: Detected groups as checkboxes (mark QC groups with badge). Select
+          All / Select None buttons. "Open Group Selection" button triggers
+          CSV Import Modal.
+  Step 3: Bar plot config grid — y-axis label, font size select, rotation
+          select, show p-value + ANOVA checkboxes.
+
+PAGE LAYOUT: Grid layout controls (same as right panel section 3 but larger)
+  + a simulated PDF page preview + spacing/font controls.
+
+COVER PAGE: 3-column layout:
+  Col 1: Cover design selector — 6 mini SVG preview cards (clickable).
+  Col 2: Report identity fields (project title, report type, subtitle,
+         prepared for/by, date, comparison, summary, tags, footer, logo text).
+  Col 3: Instrument metadata grid (LC method, polarity, MS system, scan range,
+         resolution, mass accuracy, total samples, num groups, QC samples,
+         pooled QC, report mode) + cover color palette (7 color pickers).
+  Include-cover toggle at top.
+
+STATISTICS EXPORT: Two cards side-by-side:
+  Generated plot statistics CSV (column checkboxes + export button).
+  Maven knowns-list CSV (column checkboxes + info alert + export button).
+
+PREVIEW & EXPORT: Left 2/3 = PDF viewer card with toolbar (prev/next page,
+  page indicator "Page X of N", zoom in/out). Right 1/3 = export action card
+  (Preview PDF + Export PDF Report buttons) + output options checkboxes + also-
+  export checkboxes. Simulated PDF page rendered as HTML/SVG with header, content
+  area, footer.
+
+SETTINGS PRESETS: Save-new-preset (name input + save button) + import/export
+  JSON buttons. List of saved presets each with name, description, date, figure
+  count, Load + Delete buttons.
+
+MODALS
+------
+CSV IMPORT MODAL (triggered by Import CSV button):
+  Title: "Choose groups to keep for bar plot generation"
+  CSV file info header. Yellow info alert about excluding blanks/QC.
+  Group list: each group shows checkbox + name (DM Mono) + sample count +
+  included/excluded badge. QC groups get amber "QC" badge.
+  Footer: Cancel | "Generate Plots →" (disabled if 0 selected).
+  On confirm: append new PlotItem[] to plots state with pageMode COMBINED_GRID
+  and section "Individual Bar Plots".
+
+PDF PREVIEW MODAL (full-screen overlay):
+  Dark header bar: doc icon + report name, page nav (prev/next + "Page X of N"),
+  zoom controls (−/% /+), Export PDF button, close X.
+  Main area: dark bg (#1a1a2e) with centered white PDF page (595×842px scaled
+  by zoom%). Show at least 3 page types: cover page, section break page,
+  figure page with simulated chart SVG, header, and footer.
+  Bottom strip: scrollable page thumbnail row.
+
+EXPORT CONFIRM MODAL:
+  Summary card (title, figure count, orientation, est. pages).
+  Checkboxes: export stats CSV, export Maven CSV.
+  Cancel + Export buttons. On click show loading spinner ("Building PDF…"),
+  then success state with CheckCircle icon and exported filenames.
+
+DATA MODEL (TypeScript)
+-----------------------
+PlotItem: { id, order, title, fileName, pageMode: 'SINGLE_PAGE'|'COMBINED_GRID',
+  section: 'Summary / Global'|'Heatmap'|'PCA / PLSDA'|'Volcano'|
+  'Individual Bar Plots'|'Other', selected }
+
+ReportSettings: { title, headerLabel, footerText, orientation, imageFit,
+  headerColor, backgroundColor, cardBorderColor }
+
+PlotSettings: { yAxisLabel, group1Color, group2Color, pointColor,
+  showPValue, runAnova, fontSizeMode, rotationMode }
+
+SectionLayout: { summaryPerPage, heatmapPerPage, pcaPerPage, volcanoPerPage,
+  barPlotsPerPage, otherPerPage }  — values from [1,2,4,6,8,9,12]
+
+SpacingSettings: { marginInches, headerHeightInches, footerHeightInches,
+  cardGapInches, imagePaddingInches, headerTitleFont, headerSubtitleFont,
+  imageTitleFont, footerFont }
+
+CoverSettings: { includeCover, coverDesign, projectTitle, reportType,
+  coverSubtitle, preparedFor, preparedBy, generatedDate, primaryComparison,
+  sampleSummary, analysisTags, coverFooter, logoBrandText, keyVisualizations,
+  lcMethod, polarity, msSystem, scanRange, resolution, totalSamples, numGroups,
+  qcSamples, pooledQC, reportMode, massAccuracy, coverPrimaryColor,
+  coverSecondaryColor, coverAccentColor, coverAccent2Color, coverBgColor,
+  coverInkColor, coverMutedColor }
+
+ExportSettings: { exportMavenCSV, exportStatsCSV, showSectionBreaks,
+  showHeader, showFooter, addPageNumbers, showExtraTitles, useFileNamesIfBlank }
+
+COVER DESIGN MINI-PREVIEW SVGs (6 styles, ~80×112px each)
+----------------------------------------------------------
+modern-purple: Deep purple gradient bg, translucent polygon accent shape
+  bottom-right, circle decoration top-right, white title/subtitle text rects,
+  teal accent line.
+blueprint-lcms: Dark navy bg (#0a1628), cyan grid lines, cyan dashed border
+  rect, cyan header band, white text rects.
+vertical-rail: White bg, thick colored left stripe (primary color), thinner
+  accent stripe, text content right of stripe.
+wave-infographic: White bg, SVG wave path at bottom (primary + teal layers),
+  circle decoration, colored title text.
+blueprint-dense: Dark navy (#1a2744), fine grid lines both axes, blue section
+  boxes with borders, white text rects.
+editorial-dark: Top half dark (#17172A), bottom half white, split at midpoint,
+  white title on dark, colored text on white.
+
+UX NOTES
+--------
+- All table operations (move up/down, remove, set mode, set section) are
+  immediate local state mutations.
+- Inline title editing: click pencil → input appears with save on Enter/blur.
+- Section dropdown: click badge → absolute-positioned dropdown list.
+- Right panel accordion: useState toggle per section, ChevronDown/Right icon.
+- Color inputs: pair of <input type="color"> swatch + hex text input synced.
+- Grid preview SVG: compute cols/rows from count, render colored rect cells.
+- Top breadcrumb bar: "Metabolomics Core / [Active Section]" + figure count
+  status pill.
+- All modals use fixed overlay with backdrop-filter: blur(4px) and
+  rgba(17,17,42,0.65) tint. Click outside to close (except during export).
