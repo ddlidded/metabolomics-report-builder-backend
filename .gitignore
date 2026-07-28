@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+*.egg
+build/
+dist/
+.env
+.DS_Store
+.vscode/
+*.sqlite3
+/tmp/metabolomics_report_data
